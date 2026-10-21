@@ -1,0 +1,123 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="referrer" content="no-referrer">
+<meta name="robots" content="noindex">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'unsafe-inline'; style-src 'unsafe-inline'; base-uri 'none'; form-action 'none'">
+<title>Whospair invitation</title>
+<style>
+  :root { --bg:#0f1115; --card:#171a20; --ink:#e8e6e1; --soft:#9a9890; --line:#2a2e36; --accent:#d9b779; }
+  @media (prefers-color-scheme: light) { :root { --bg:#f4f2ee; --card:#fff; --ink:#1c1d20; --soft:#6a6862; --line:#dedad2; --accent:#8a6a2e; } }
+  * { box-sizing:border-box; }
+  body { margin:0; min-height:100vh; display:flex; align-items:center; justify-content:center; padding:24px 16px;
+         background:var(--bg); color:var(--ink); font:16px/1.55 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif; }
+  main { width:100%; max-width:420px; background:var(--card); border:1px solid var(--line); border-radius:20px; padding:28px 24px; }
+  h1 { font-size:22px; margin:0 0 6px; font-weight:600; }
+  .lead { color:var(--soft); margin:0 0 24px; }
+  a.btn { display:block; text-align:center; text-decoration:none; background:var(--accent); color:#111; font-weight:600;
+          padding:14px; border-radius:14px; }
+  h2 { font-size:15px; margin:28px 0 8px; font-weight:600; }
+  ol { margin:0; padding-inline-start:20px; color:var(--soft); }
+  li { margin:4px 0; }
+  .note { margin-top:24px; font-size:13px; color:var(--soft); border-top:1px solid var(--line); padding-top:16px; }
+  .bad { color:var(--soft); }
+</style>
+</head>
+<body>
+<main>
+  <h1 id="t"></h1>
+  <p class="lead" id="lead"></p>
+  <a class="btn" id="open" href="#"></a>
+  <h2 id="h"></h2>
+  <ol><li id="s1"></li><li id="s2"></li><li id="s3"></li></ol>
+  <p class="note" id="note"></p>
+</main>
+<script>
+// La clé est dans le fragment (#…) : le navigateur ne l'envoie jamais au
+// serveur. Cette page ne charge rien d'extérieur et ne mesure rien.
+(function () {
+  var L = {
+    en: { t:"You're invited to Whospair", lead:"A messenger with no server and no phone number. Everything goes through Tor.",
+          open:"Open in Whospair", h:"Don't have the app yet?",
+          s1:"Ask the person who invited you to send it: in Whospair, “Share Whospair”.",
+          s2:"Install it, choose your PIN.", s3:"Come back to this link and tap “Open in Whospair”.",
+          note:"This page sees nothing: your contact's key stays in the link and never reaches any server.",
+          bad:"This invitation link is incomplete. Ask for it again." },
+    fr: { t:"Tu es invité sur Whospair", lead:"Une messagerie sans serveur et sans numéro. Tout passe par Tor.",
+          open:"Ouvrir dans Whospair", h:"Pas encore l'app ?",
+          s1:"Demande-la à la personne qui t'invite : dans Whospair, « Partager Whospair ».",
+          s2:"Installe-la, choisis ton code PIN.", s3:"Reviens sur ce lien et touche « Ouvrir dans Whospair ».",
+          note:"Cette page ne voit rien : la clé de ton contact reste dans le lien et n'arrive sur aucun serveur.",
+          bad:"Ce lien d'invitation est incomplet. Redemande-le." },
+    es: { t:"Te invitaron a Whospair", lead:"Una mensajería sin servidor y sin número. Todo pasa por Tor.",
+          open:"Abrir en Whospair", h:"¿Aún no tienes la app?",
+          s1:"Pídesela a quien te invitó: en Whospair, «Compartir Whospair».",
+          s2:"Instálala y elige tu PIN.", s3:"Vuelve a este enlace y toca «Abrir en Whospair».",
+          note:"Esta página no ve nada: la clave de tu contacto se queda en el enlace y no llega a ningún servidor.",
+          bad:"Este enlace de invitación está incompleto. Pídelo de nuevo." },
+    pt: { t:"Você foi convidado para o Whospair", lead:"Um mensageiro sem servidor e sem número. Tudo passa pelo Tor.",
+          open:"Abrir no Whospair", h:"Ainda não tem o app?",
+          s1:"Peça a quem te convidou: no Whospair, “Compartilhar Whospair”.",
+          s2:"Instale e escolha seu PIN.", s3:"Volte a este link e toque em “Abrir no Whospair”.",
+          note:"Esta página não vê nada: a chave do seu contato fica no link e não chega a nenhum servidor.",
+          bad:"Este link de convite está incompleto. Peça de novo." },
+    ru: { t:"Вас пригласили в Whospair", lead:"Мессенджер без сервера и без номера телефона. Всё идёт через Tor.",
+          open:"Открыть в Whospair", h:"Ещё нет приложения?",
+          s1:"Попросите того, кто пригласил: в Whospair — «Поделиться Whospair».",
+          s2:"Установите и выберите PIN.", s3:"Вернитесь к этой ссылке и нажмите «Открыть в Whospair».",
+          note:"Эта страница ничего не видит: ключ контакта остаётся в ссылке и не попадает ни на какой сервер.",
+          bad:"Ссылка-приглашение неполная. Попросите её ещё раз." },
+    fa: { t:"به Whospair دعوت شده‌ای", lead:"پیام‌رسانی بدون سرور و بدون شماره. همه‌چیز از Tor می‌گذرد.",
+          open:"باز کردن در Whospair", h:"هنوز برنامه را نداری؟",
+          s1:"از کسی که دعوتت کرده بخواه: در Whospair، «اشتراک‌گذاری Whospair».",
+          s2:"نصبش کن و PIN خودت را انتخاب کن.", s3:"به این پیوند برگرد و «باز کردن در Whospair» را بزن.",
+          note:"این صفحه چیزی نمی‌بیند: کلید مخاطبت در پیوند می‌ماند و به هیچ سروری نمی‌رسد.",
+          bad:"این پیوند دعوت ناقص است. دوباره درخواستش کن." },
+    ar: { t:"أنت مدعو إلى Whospair", lead:"تطبيق مراسلة بلا خادم وبلا رقم هاتف. كل شيء يمر عبر Tor.",
+          open:"افتح في Whospair", h:"ليس لديك التطبيق بعد؟",
+          s1:"اطلبه ممن دعاك: في Whospair، «مشاركة Whospair».",
+          s2:"ثبّته واختر رمز PIN.", s3:"عد إلى هذا الرابط واضغط «افتح في Whospair».",
+          note:"هذه الصفحة لا ترى شيئًا: مفتاح جهة اتصالك يبقى في الرابط ولا يصل إلى أي خادم.",
+          bad:"رابط الدعوة هذا ناقص. اطلبه مرة أخرى." },
+    zh: { t:"你被邀请加入 Whospair", lead:"没有服务器、不用手机号的通讯应用。一切都经过 Tor。",
+          open:"在 Whospair 中打开", h:"还没有这个应用？",
+          s1:"请邀请你的人发给你：在 Whospair 中点“分享 Whospair”。",
+          s2:"安装并设置你的 PIN。", s3:"回到这个链接，点“在 Whospair 中打开”。",
+          note:"本页面什么也看不到：联系人的密钥只留在链接里，不会到达任何服务器。",
+          bad:"这个邀请链接不完整，请重新索取。" }
+  };
+  var langs = (navigator.languages || [navigator.language || "en"]);
+  var code = "en";
+  for (var i = 0; i < langs.length; i++) {
+    var c = String(langs[i]).toLowerCase().split("-")[0];
+    if (L[c]) { code = c; break; }
+  }
+  var s = L[code];
+  document.documentElement.lang = code;
+  if (code === "ar" || code === "fa") document.documentElement.dir = "rtl";
+  document.title = s.t;
+  ["t","lead","open","h","s1","s2","s3","note"].forEach(function (k) {
+    document.getElementById(k).textContent = s[k];
+  });
+
+  // 128 hex (X25519 + Ed25519) + 56 base32 (onion v3). La somme de contrôle
+  // onion est vérifiée par l'app ; ici, seule la forme est filtrée.
+  var key = location.hash.slice(1).replace(/\s/g, "").toLowerCase();
+  var btn = document.getElementById("open");
+  if (/^[0-9a-f]{128}[a-z2-7]{56}$/.test(key)) {
+    // Repli quand Android n'a pas encore vérifié le domaine : le schéma
+    // propre à l'app, que son manifeste capte déjà.
+    btn.href = "whospair://add_contact?key=" + key;
+  } else {
+    btn.removeAttribute("href");
+    btn.style.display = "none";
+    var p = document.getElementById("lead");
+    p.textContent = s.bad;
+    p.className = "lead bad";
+  }
+})();
+</script>
+</body>
+</html>

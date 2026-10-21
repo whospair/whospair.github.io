@@ -1,0 +1,8 @@
+[{
+  "relation": ["delegate_permission/common.handle_all_urls"],
+  "target": {
+    "namespace": "android_app",
+    "package_name": "com.whisper",
+    "sha256_cert_fingerprints": ["32:12:F1:26:26:80:B4:CB:1E:2F:AF:AC:19:00:43:5A:A6:03:C3:70:47:A8:67:F9:35:82:CF:A2:A3:0B:C9:FB"]
+  }
+}]
